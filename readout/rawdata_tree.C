@@ -25,6 +25,8 @@
 #include <TPad.h>
 #include <TTree.h>
 using namespace std;
+
+// MPPC no coordinate
 double x_ch[64] ={
   -3.5,-3.5,-3.5,-3.5,-2.5,-2.5,-2.5,-2.5,-1.5,-1.5,-1.5,-1.5,-0.5,-0.5,-0.5,-0.5,-3.5,-3.5,-3.5,-3.5,-2.5,-2.5,-2.5,-2.5,-1.5,-1.5,-1.5,-1.5,-0.5,-0.5,-0.5,-0.5,
   3.5,3.5,3.5,3.5,2.5,2.5,2.5,2.5,1.5,1.5,1.5,1.5,0.5,0.5,0.5,0.5,
@@ -34,6 +36,7 @@ double y_ch[64] ={
   -1.5,-0.5,-2.5,-3.5,-0.5,-1.5,-3.5,-2.5,-1.5,-0.5,-2.5,-3.5,-0.5,-1.5,-3.5,-2.5,
   1.5,0.5,2.5,3.5,0.5,1.5,3.5,2.5,1.5,0.5,2.5,3.5,0.5,1.5,3.5,2.5,
   -2.5,-3.5,-1.5,-0.5,-3.5,-2.5,-0.5,-1.5,-2.5,-3.5,-1.5,-0.5,-3.5,-2.5,-0.5,-1.5};
+
 class config_data{
     public:
         config_data();
@@ -45,6 +48,7 @@ class config_data{
         std::string before_dark_val_filename;
         std::string after_dark_val_filename;
         std::string easiroc_data_filename;
+        std::string output_filename;
         double fVoltage;
         double after_Voltage;
         bool fCAEN;
@@ -62,6 +66,7 @@ config_data::config_data(){
     std::string before_dark_val_filename = "dark_HV56p24_903_2.root";
     std::string after_dark_val_filename = "dark_HV56p24_903_2.root";
     std::string easiroc_data_filename = "ak-MANNAKA-HV56P24";
+    std::string output_filename = "/rhome/tabe/RTR_kaiseki/run_number/";
     double fVoltage = 56.24;
     double after_Voltage = 56.24;
     bool fCAEN = false;
@@ -75,6 +80,8 @@ config_data::config_data(){
 }
 config_data::~config_data(){
 }
+
+// get config  
 void config_data::read_config(std::string filename){
     std::ifstream ifs(filename);
     if(!ifs){
@@ -98,6 +105,8 @@ void config_data::read_config(std::string filename){
             iss >> after_dark_val_filename;
         }else if(key == "easiroc_data_filename"){
             iss >> easiroc_data_filename;
+        }else if(key == "output_filename"){
+            iss >> output_filename;
         }else if(key == "Voltage"){
             iss >> fVoltage;
         }else if(key == "after_Voltage"){
@@ -117,6 +126,8 @@ void config_data::read_config(std::string filename){
         }
     }
 }
+
+// combine .root files into tree format
 void treemake(config_data config){
     std::ifstream hoge(config.easiroc_data_filename,std::ios::binary);
     if(!hoge.is_open()){
@@ -135,10 +146,12 @@ void treemake(config_data config){
         std::cerr << "Error: file not opened" << std::endl;
         return;
     }
-    std::string outfile = config.easiroc_data_filename + ".root";
+
+    std::string outfile = config.output_filename + ".root";
     std::cout << "making TTrees : " << outfile << std::endl; 
     TFile*file = new TFile(outfile.c_str(),"RECREATE");
     TTree *tree = new TTree("tree","tree");
+    
     int adc[64];
     int event_number;
     int CAEN_wavelength;
@@ -191,8 +204,10 @@ void treemake(config_data config){
     event_number = 0;
     int j =0;
     while(!hoge.eof() && (((!ifs_caen[0].eof() || !ifs_caen[1].eof()) && config.fCAEN)|| !config.fCAEN) ){
+            if(event_number % 10000 == 0){
             std::cout << "event_number : " << event_number << std::endl;
-        
+            }
+            
         UInt_t val;
         hoge.read((char*)&val, sizeof(int));
         if(config.fCAEN && config.fCAENbinary){

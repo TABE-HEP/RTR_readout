@@ -1,12 +1,13 @@
-before_laser_val_filename /media/kuzelab/HDD/laser4/laser.root
-after_laser_val_filename /media/kuzelab/HDD/laser4/laser.root
-before_dark_val_filename /media/kuzelab/HDD/laser4/dark.root
-after_dark_val_filename /media/kuzelab/HDD/laser4/dark.root
-easiroc_data_filename /media/kuzelab/HDD/run17/run
+before_laser_val_filename /disk1/user/maruya/RTR_beamdata/run17/laser_after.root
+after_laser_val_filename /disk1/user/maruya/RTR_beamdata/run17/laser_after.root
+before_dark_val_filename /disk1/user/maruya/RTR_beamdata/run17/dark_after.root
+after_dark_val_filename /disk1/user/maruya/RTR_beamdata/run17/dark_after.root
+easiroc_data_filename /disk1/user/maruya/RTR_beamdata/run17/run
+output_filename /rhome/tabe/RTR_kaiseki/run17/run
 fVoltage 56.24
 after_Voltage 56.24
 fCAEN false
-fCAENfilename /rhome/maruya/disklink/laser_grease/1023/6/wave0.txt /rhome/maruya/disklink/laser_grease/1023/6/wave0.txt
-fCAENPMTchannel 5 6
+fCAENfilename /disk1/user/maruya/RTR_beamdata/run17/wave0.txt /disk1/user/maruya/RTR_beamdata/run17/wave1.txt
+fCAENPMTchannel 3 4
 fCAMACTDC = false
 fCAMACADC = false

@@ -31,6 +31,7 @@ class config_data{
         std::string before_dark_val_filename;
         std::string after_dark_val_filename;
         std::string easiroc_data_filename;
+        std::string output_filename;
         double fVoltage;
         double after_Voltage;
         bool fCAEN;
@@ -49,6 +50,7 @@ config_data::config_data(){
     std::string before_dark_val_filename = "dark_HV56p24_903_2.root";
     std::string after_dark_val_filename = "dark_HV56p24_903_2.root";
     std::string easiroc_data_filename = "ak-MANNAKA-HV56P24";
+    std::string output_filename = "/rhome/tabe/RTR_kaiseki/run_number/run";
     double fVoltage = 56.24;
     double after_Voltage = 56.24;
     bool fCAEN = false;
@@ -87,6 +89,8 @@ void config_data::read_config(std::string filename){
             iss >> after_dark_val_filename;
         }else if(key == "easiroc_data_filename"){
             iss >> easiroc_data_filename;
+        }else if(key == "output_filename"){
+            iss >> output_filename;
         }else if(key == "Voltage"){
             iss >> fVoltage;
         }else if(key == "after_Voltage"){

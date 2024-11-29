@@ -51,5 +51,6 @@
         "streambuf": "c",
         "typeinfo": "c",
         "MPPCdata.C": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

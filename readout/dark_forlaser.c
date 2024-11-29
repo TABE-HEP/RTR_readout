@@ -34,18 +34,25 @@ double y_ch[64] ={
   -2.5,-3.5,-1.5,-0.5,-3.5,-2.5,-0.5,-1.5,-2.5,-3.5,-1.5,-0.5,-3.5,-2.5,-0.5,-1.5};
 
 
+// 実行前にrun_numberをmkdirすること
+// filename = run_number/dark_before(after)
+// val_filename = run_number/laser_before(after).root <- ./val_V4 で作成済み
 void val(string filename = "laser_5kHz30p8_HV56p22", string val_filename = "laser_HV56p24_903_2.root",int threshold = 850){
   gROOT->SetStyle("Plain");
   double mean = 0;
   double RMS = 0;
   
-  std::ifstream hoge(filename,std::ios::binary);
+  string filename_path = "/disk1/user/maruya/RTR_beamdata/"+filename;
+  std::ifstream hoge(filename_path,std::ios::binary);
   if(!hoge.is_open()){
     cout << "no file" << endl;
     return;
   }
-  string outfile = filename + ".root";
-  TFile*file = new TFile(outfile.c_str(),"RECREATE");
+
+  string outfile = "/rhome/tabe/RTR_kaiseki/"+filename;
+  string outfile_root = outfile+".root";
+
+  TFile*file = new TFile(outfile_root.c_str(),"RECREATE");
   TFile*val_file = new TFile(val_filename.c_str(),"READ");
   std::cout<< "val_file open" << std::endl;
   TGraphErrors*gains = (TGraphErrors*)val_file->Get("gain");
@@ -137,9 +144,9 @@ void val(string filename = "laser_5kHz30p8_HV56p22", string val_filename = "lase
     hist3->SetLineWidth(2);
     hist3->Draw("hist");
     string histname;
-    if(i==0){histname = filename+".pdf(";}
-    else if(i==63){histname = filename+".pdf)";}
-    else{histname = filename+".pdf";}
+    if(i==0){histname = outfile+".pdf(";}
+    else if(i==63){histname = outfile+".pdf)";}
+    else{histname = outfile+".pdf";}
     std::cout << histname << std::endl;
     c1->SaveAs(histname.c_str(),"pdf");
     int n_D;

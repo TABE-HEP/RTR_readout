@@ -24,20 +24,22 @@
 #include <TLatex.h>
 using namespace std;
 
-
+// 実行前に mkdir run_numberをすること
+// filename = run_number/laser_before(after)
 void val(string filename = "laser_5kHz30p8_HV56p22"){
   gROOT->SetStyle("Plain");
   std::vector<int> notgood;
   double mean = 0;
   double RMS = 0;
   
-  std::ifstream hoge(filename,std::ios::binary);
+  std::ifstream hoge("/disk1/user/maruya/RTR_beamdata/"+filename,std::ios::binary);
   if(!hoge.is_open()){
     cout << "no file" << endl;
     return;
   }
-  string outfile = filename + ".root";
-  TFile*file = new TFile(outfile.c_str(),"RECREATE");
+  string outfile = "/rhome/tabe/RTR_kaiseki/"+filename;
+  string outfile_root = outfile + ".root";
+  TFile*file = new TFile(outfile_root.c_str(),"RECREATE");
   TH1F *hist[64];
   TH2F* chhist = new TH2F("chhist","",64,0-0.5,64-0.5,1500,500,2000);
   for(int i = 0; i<64; ++i){
@@ -198,9 +200,9 @@ void val(string filename = "laser_5kHz30p8_HV56p22"){
     g1->GetXaxis()->SetLimits(-0.5,1.5);
     g1->Draw("AP");
     string histname;
-    if(i==0){histname = filename+".pdf(";}
-    else if(i==63){histname = filename+".pdf)";}
-    else{histname = filename+".pdf";}
+    if(i==0){histname = outfile+".pdf(";}
+    else if(i==63){histname = outfile+".pdf)";}
+    else{histname = outfile+".pdf";}
     c1->SaveAs(histname.c_str(),"pdf"); 
   }
   TCanvas *c2 = new TCanvas("c2","c2",2000,1000);
@@ -272,7 +274,7 @@ void val(string filename = "laser_5kHz30p8_HV56p22"){
   }
   sigmas1->Draw("APsame");
   sigmas1->Write();
-  c2->SaveAs((filename+"_gainbias.png").c_str(),"png");
+  c2->SaveAs((outfile+"_gainbias.png").c_str(),"png");
   file->Write();
   file->Close();
   for(int oo: notgood){
